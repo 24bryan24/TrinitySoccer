@@ -26,4 +26,5 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           firebaseServiceAccount: "${{ secrets.trinitysoccertraining }}"
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
           channelId: live
