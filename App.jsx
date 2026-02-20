@@ -117,7 +117,7 @@ function HomeView({ setCurrentView }) {
         </div>
       </section>
 
-      {/* Programs */}
+      {/* Programs 3 */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-4xl font-black italic uppercase tracking-tighter text-zinc-900 mb-16 text-center">Development Plans</h2>
