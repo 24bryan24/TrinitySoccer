@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Activity, Crosshair, ShieldAlert, CalendarClock, ChevronRight, UserCircle2, CreditCard, Star, LogIn, ChevronDown, Menu, X, Type, ImageIcon, RotateCcw, Settings } from 'lucide-react';
+import { loadContentFromFirebase, saveContentToFirebase } from './firebase.js';
 
 const STORAGE_KEY = 'trinity-soccer-content';
 
@@ -68,25 +69,44 @@ const defaultContent = {
   review2Image: '',
 };
 
-function loadContent() {
+function loadContentFromLocalStorage() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) return { ...defaultContent, ...JSON.parse(saved) };
   } catch (_) {}
-  return { ...defaultContent };
+  return null;
 }
 
 export default function App() {
-  const [content, setContent] = useState(loadContent);
+  const [content, setContent] = useState({ ...defaultContent });
+  const [contentLoaded, setContentLoaded] = useState(false);
   const [currentView, setCurrentView] = useState('home');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      const fromFirebase = await loadContentFromFirebase();
+      if (cancelled) return;
+      if (fromFirebase && typeof fromFirebase === 'object') {
+        setContent({ ...defaultContent, ...fromFirebase });
+      } else {
+        const fromLocal = loadContentFromLocalStorage();
+        if (fromLocal) setContent(fromLocal);
+      }
+      setContentLoaded(true);
+    }
+    load();
+    return () => { cancelled = true; };
+  }, []);
+
   const updateContent = useCallback((key, value) => {
     setContent(prev => {
       const next = { ...prev, [key]: value };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      saveContentToFirebase(next);
       return next;
     });
   }, []);
@@ -94,6 +114,7 @@ export default function App() {
   const resetContent = useCallback(() => {
     setContent({ ...defaultContent });
     localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultContent));
+    saveContentToFirebase(defaultContent);
   }, []);
 
   const handleLogin = (e) => {

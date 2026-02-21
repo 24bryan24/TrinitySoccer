@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Site content - readable by all, writable by all (add auth later to restrict writes)
+    match /config/{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
