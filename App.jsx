@@ -371,7 +371,7 @@ function HomeView({ setCurrentView, content }) {
     <div className="space-y-0">
       <section className={`bg-zinc-950 text-white py-32 relative overflow-hidden ${content.heroImage ? '' : ''}`} style={content.heroImage ? { backgroundImage: `url(${content.heroImage})`, backgroundSize: 'cover', backgroundPosition: 'center' } : {}}>
         {!content.heroImage && <div className="absolute top-0 right-0 w-1/2 h-full bg-red-600 transform skew-x-12 translate-x-32 opacity-10"></div>}
-        {content.heroImage && <div className="absolute inset-0 bg-zinc-950/80"></div>}
+        {content.heroImage && <div className="absolute inset-0 bg-zinc-950/50"></div>}
         <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col items-center text-center">
           <p className="text-red-600 font-bold tracking-widest uppercase mb-6 flex items-center gap-2">
             <Activity size={18} /> {content.heroTagline}
